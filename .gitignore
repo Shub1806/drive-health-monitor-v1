@@ -1,0 +1,15 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+
+# raw data stays local; it is large and public
+data/
+*.csv
+*.zip
+
+# local vector index (fallback RAG)
+*.faiss
