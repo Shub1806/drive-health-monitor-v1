@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS DRIVE_HEALTH.BRONZE.DRIVE_STATS_RAW (
 -- 2) Upload (run from the Snowflake CLI, not a Snowsight worksheet; PUT is client-side).
 --    Files are gzip-compressed on upload, so they appear in the stage as <name>.csv.gz.
 --
---    snow sql -q "PUT 'file:///Users/pragyarawat/Documents/shubprojects/snowflake-proj/data_Q2_2026/*.csv' @DRIVE_HEALTH.BRONZE.RAW_STAGE AUTO_COMPRESS=TRUE PARALLEL=8 OVERWRITE=FALSE"
+--    snow sql -q "PUT 'file:///path/to/data_Q2_2026/*.csv' @DRIVE_HEALTH.BRONZE.RAW_STAGE AUTO_COMPRESS=TRUE PARALLEL=8 OVERWRITE=FALSE"
 
 -- 3) Load. Re-running skips files already loaded (COPY tracks load history for 64 days),
 --    so it will not create duplicates. Default ON_ERROR aborts on the first bad file.

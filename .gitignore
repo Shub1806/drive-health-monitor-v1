@@ -13,3 +13,28 @@ data/
 
 # local vector index (fallback RAG)
 *.faiss
+
+# local embedding cache
+.cache/
+
+# environment files and secrets (the template stays tracked)
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+.snowflake/
+
+# model and download artifacts
+models/
+*.gguf
+*.safetensors
+*.onnx
+*.pt
+.huggingface/
+
+# test and tool caches
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
