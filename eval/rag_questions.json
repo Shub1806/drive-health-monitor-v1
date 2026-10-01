@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "note": "Hand-written. A question is a hit at k if any expected doc_id is among the top k retrieved. A question with no expected documents is an abstention test: nothing should score above the minimum similarity.",
+  "questions": [
+    {
+      "id": "q01",
+      "question": "What does SMART 5 measure?",
+      "expected_doc_ids": [
+        "attr:smart_5_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q02",
+      "question": "What is a pending sector, and which attribute counts them?",
+      "expected_doc_ids": [
+        "attr:smart_197_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q03",
+      "question": "How does the uncorrectable sector count differ from reported uncorrectable errors?",
+      "expected_doc_ids": [
+        "attr:smart_198_raw",
+        "attr:smart_187_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q04",
+      "question": "Why are SMART 188 values missing for many drives?",
+      "expected_doc_ids": [
+        "attr:smart_188_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q05",
+      "question": "What does power-on hours tell me?",
+      "expected_doc_ids": [
+        "attr:smart_9_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q06",
+      "question": "Which attribute reports temperature, and in what unit?",
+      "expected_doc_ids": [
+        "attr:smart_194_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q07",
+      "question": "How does the rule baseline score a drive?",
+      "expected_doc_ids": [
+        "method:rule_baseline"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q08",
+      "question": "What does a rule score of 6 mean?",
+      "expected_doc_ids": [
+        "method:rule_baseline"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q09",
+      "question": "How does the Isolation Forest decide a drive is unusual?",
+      "expected_doc_ids": [
+        "method:isolation_forest"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q10",
+      "question": "Can the Isolation Forest say which attribute caused a flag?",
+      "expected_doc_ids": [
+        "method:isolation_forest"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q11",
+      "question": "Is an anomaly score a probability of failure?",
+      "expected_doc_ids": [
+        "method:rule_baseline",
+        "method:isolation_forest"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q12",
+      "question": "Where does the data come from, and how often is a drive recorded?",
+      "expected_doc_ids": [
+        "dataset:backblaze_q2_2026"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q13",
+      "question": "Do SMART 197 and 198 tend to move together?",
+      "expected_doc_ids": [
+        "attr:smart_197_raw",
+        "attr:smart_198_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q14",
+      "question": "Why is a drive compared with others of the same model?",
+      "expected_doc_ids": [
+        "method:rule_baseline"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "q15",
+      "question": "What is the best hard drive brand to buy?",
+      "expected_doc_ids": [],
+      "abstain": true
+    }
+  ]
+}

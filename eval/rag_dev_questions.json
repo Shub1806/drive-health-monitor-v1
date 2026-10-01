@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "note": "Development questions, used only to set the minimum similarity. They are not part of the evaluation set.",
+  "questions": [
+    {
+      "id": "d1",
+      "question": "What does the SMART 9 raw value count?",
+      "expected_doc_ids": [
+        "attr:smart_9_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "d2",
+      "question": "Explain how the unusual-drive score from the forest is built",
+      "expected_doc_ids": [
+        "method:isolation_forest"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "d3",
+      "question": "What is the data source for this project?",
+      "expected_doc_ids": [
+        "dataset:backblaze_q2_2026"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "d4",
+      "question": "Which points does a drive get in the rules approach?",
+      "expected_doc_ids": [
+        "method:rule_baseline"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "d5",
+      "question": "Are reallocated sectors bad?",
+      "expected_doc_ids": [
+        "attr:smart_5_raw"
+      ],
+      "abstain": false
+    },
+    {
+      "id": "d6",
+      "question": "How do I bake sourdough bread?",
+      "expected_doc_ids": [],
+      "abstain": true
+    }
+  ]
+}

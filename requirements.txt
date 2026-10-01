@@ -4,3 +4,5 @@ scikit-learn
 pytest
 snowpark-connect[jdk]
 pyspark==3.5.6
+sentence-transformers
+requests
