@@ -312,6 +312,8 @@ def detect_window(spark, gold: DataFrame, role: str, start: date, end: date, dat
         "eval_failure",
         "eval_failure_within_30d",
         "eval_label_is_complete",
+        # Last, so an append works whether columns are matched by name or by position.
+        F.col("score").cast("double").alias("anomaly_score"),
     )
     return {"run": run, "anomalies": anomalies, "top_rows": rows}
 
