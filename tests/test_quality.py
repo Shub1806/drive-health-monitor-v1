@@ -15,6 +15,7 @@ from src.quality import (
     check_null_rates,
     check_row_accounting,
     check_rows_per_day,
+    check_training_sample,
     check_zero_violations,
 )
 
@@ -258,3 +259,24 @@ def test_detection_results_flag_each_kind_of_problem():
     assert "outside 0..8" in failures([1], ["a"], [None])
     assert "scores increase with rank" in failures([1, 2], ["a", "b"], [1, 3])
     assert "more than the 2 allowed" in failures([1, 2, 3], ["a", "b", "c"], [3, 2, 1], max_rows=2)
+
+
+def test_detection_results_accept_float_scores_and_reject_nan():
+    assert check_detection_results([1, 2], ["a", "b"], [0.71, 0.55], 1.0, 1000) == []
+    assert "outside 0..1.0" in " ".join(check_detection_results([1], ["a"], [float("nan")], 1.0, 1000))
+    assert "outside 0..1.0" in " ".join(check_detection_results([1], ["a"], [1.2], 1.0, 1000))
+
+
+def test_training_sample_passes_when_capped_with_one_row_per_drive():
+    assert check_training_sample(200_000, 200_000, 21, 355_889, 200_000, 21) == []
+    assert check_training_sample(150, 150, 21, 150, 200_000, 21) == []  # fewer drives than the cap
+
+
+def test_training_sample_flags_each_kind_of_problem():
+    def failures(*args):
+        return " | ".join(check_training_sample(*args))
+
+    assert "expected 200000" in failures(199_999, 199_999, 21, 355_889, 200_000, 21)
+    assert "expected one row per drive" in failures(200_000, 190_000, 21, 355_889, 200_000, 21)
+    assert "20 feature columns" in failures(200_000, 200_000, 20, 355_889, 200_000, 21)
+    assert "expected 150" in failures(149, 149, 21, 150, 200_000, 21)

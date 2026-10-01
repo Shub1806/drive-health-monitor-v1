@@ -370,8 +370,9 @@ def test_detect_window_end_to_end(spark):
     assert tuple(result["anomalies"].columns) == (
         "run_id", "method", "rank", "serial_number", "model", "flagged_date", "score",
         "max_critical_z", "triggered_rules", "window_start", "window_end",
-        "eval_failure", "eval_failure_within_30d", "eval_label_is_complete",
+        "eval_failure", "eval_failure_within_30d", "eval_label_is_complete", "anomaly_score",
     )
+    assert all(r["anomaly_score"] == float(r["score"]) for r in result["anomalies"].collect())
 
 
 def two_window_gold(spark):

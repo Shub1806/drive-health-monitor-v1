@@ -216,10 +216,33 @@ def check_detection_results(
         failures.append("detection results: ranks are not contiguous from 1 in order")
     if len(set(serials)) != len(serials):
         failures.append("detection results: a drive appears more than once in the run")
-    if any(score is None or score < 0 or score > max_score for score in scores):
+    if any(score is None or score != score or score < 0 or score > max_score for score in scores):
         failures.append(f"detection results: a score is missing or outside 0..{max_score}")
     elif any(later > earlier for earlier, later in zip(scores, list(scores)[1:])):
         failures.append("detection results: scores increase with rank")
+    return failures
+
+
+def check_training_sample(
+    n_rows: int,
+    n_drives: int,
+    n_columns: int,
+    candidate_drives: int,
+    cap: int,
+    expected_columns: int,
+) -> List[str]:
+    """The model's training matrix: one row per drive, capped, with exactly the expected columns."""
+    failures = []
+    if n_columns != expected_columns:
+        failures.append(f"training sample: {n_columns} feature columns, expected {expected_columns}")
+    if n_rows != n_drives:
+        failures.append(f"training sample: {n_rows} rows but {n_drives} distinct drives; expected one row per drive")
+    expected_rows = min(candidate_drives, cap)
+    if n_rows != expected_rows:
+        failures.append(
+            f"training sample: {n_rows} rows, expected {expected_rows} "
+            f"(min of {candidate_drives} eligible drives and the cap {cap})"
+        )
     return failures
 
 
