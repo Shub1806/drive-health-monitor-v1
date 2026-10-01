@@ -2,4 +2,5 @@ python-dotenv
 pandas
 scikit-learn
 pytest
-# Snowflake client packages are added in the config step, after checking current docs
+snowpark-connect[jdk]
+pyspark==3.5.6
