@@ -5,7 +5,7 @@ list of failure messages, so the rules can be tested without a Snowflake connect
 `assert_quality` turns any collected failures into one loud error.
 """
 from datetime import date, timedelta
-from typing import Iterable, List, Mapping, Tuple
+from typing import Iterable, List, Mapping, Sequence, Tuple
 
 # A day with less than this share of the median day's rows is treated as a partial load.
 MIN_DAY_FRACTION_OF_MEDIAN = 0.5
@@ -198,6 +198,28 @@ def check_matches_silver(gold: Mapping, silver: Mapping) -> List[str]:
     for key in ("failure_sum", "label_sum"):
         if gold[key] != silver[key]:
             failures.append(f"silver match: {key} is {gold[key]} in gold, {silver[key]} in silver")
+    return failures
+
+
+def check_detection_results(
+    ranks: Sequence[int],
+    serials: Sequence[str],
+    scores: Sequence[int],
+    max_score: int,
+    max_rows: int,
+) -> List[str]:
+    """Stored top drives for one run: ranks 1..n in order, one row per drive, sane sorted scores."""
+    failures = []
+    if len(ranks) > max_rows:
+        failures.append(f"detection results: {len(ranks)} rows, more than the {max_rows} allowed")
+    if list(ranks) != list(range(1, len(ranks) + 1)):
+        failures.append("detection results: ranks are not contiguous from 1 in order")
+    if len(set(serials)) != len(serials):
+        failures.append("detection results: a drive appears more than once in the run")
+    if any(score is None or score < 0 or score > max_score for score in scores):
+        failures.append(f"detection results: a score is missing or outside 0..{max_score}")
+    elif any(later > earlier for earlier, later in zip(scores, list(scores)[1:])):
+        failures.append("detection results: scores increase with rank")
     return failures
 
 

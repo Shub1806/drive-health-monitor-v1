@@ -7,6 +7,7 @@ from src.quality import (
     MAX_SMART_NULL_RATE,
     assert_quality,
     check_cast_loss,
+    check_detection_results,
     check_duplicate_keys,
     check_label_complete,
     check_labels,
@@ -239,3 +240,21 @@ def test_matches_silver_flags_each_kind_of_difference():
     assert "rows per day differ on 1 day(s)" in text
     assert "failure_sum is 1 in gold, 2 in silver" in text
     assert "label_sum is 6 in gold, 5 in silver" in text
+
+
+def test_detection_results_pass_on_ordered_unique_contiguous_rows():
+    assert check_detection_results([1, 2, 3], ["a", "b", "c"], [5, 5, 2], 8, 1000) == []
+    assert check_detection_results([], [], [], 8, 1000) == []
+
+
+def test_detection_results_flag_each_kind_of_problem():
+    def failures(ranks, serials, scores, max_rows=1000):
+        return " | ".join(check_detection_results(ranks, serials, scores, 8, max_rows))
+
+    assert "not contiguous" in failures([1, 3], ["a", "b"], [2, 1])
+    assert "not contiguous" in failures([2, 1], ["a", "b"], [2, 1])
+    assert "more than once" in failures([1, 2], ["a", "a"], [2, 1])
+    assert "outside 0..8" in failures([1], ["a"], [9])
+    assert "outside 0..8" in failures([1], ["a"], [None])
+    assert "scores increase with rank" in failures([1, 2], ["a", "b"], [1, 3])
+    assert "more than the 2 allowed" in failures([1, 2, 3], ["a", "b", "c"], [3, 2, 1], max_rows=2)
