@@ -174,6 +174,33 @@ def check_label_complete(
     return failures
 
 
+def check_zero_violations(violations: Mapping[str, int]) -> List[str]:
+    """Each entry counts rows that break a structural rule; every count must be zero."""
+    return [f"{rule}: {count} row(s)" for rule, count in violations.items() if count > 0]
+
+
+def check_matches_silver(gold: Mapping, silver: Mapping) -> List[str]:
+    """Gold adds columns, never rows or labels, so these totals must equal Silver's."""
+    failures = []
+    if gold["total_rows"] != silver["total_rows"]:
+        failures.append(
+            f"silver match: gold has {gold['total_rows']} rows, silver has {silver['total_rows']}"
+        )
+    if gold["day_counts"] != silver["day_counts"]:
+        differing = sorted(
+            day
+            for day in set(gold["day_counts"]) | set(silver["day_counts"])
+            if gold["day_counts"].get(day) != silver["day_counts"].get(day)
+        )
+        failures.append(
+            f"silver match: rows per day differ on {len(differing)} day(s), first {differing[0]}"
+        )
+    for key in ("failure_sum", "label_sum"):
+        if gold[key] != silver[key]:
+            failures.append(f"silver match: {key} is {gold[key]} in gold, {silver[key]} in silver")
+    return failures
+
+
 def assert_quality(failures: Iterable[str]) -> None:
     """Raise one error listing every failed rule, or return quietly if none failed."""
     failures = list(failures)

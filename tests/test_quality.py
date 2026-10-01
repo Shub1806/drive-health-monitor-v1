@@ -10,9 +10,11 @@ from src.quality import (
     check_duplicate_keys,
     check_label_complete,
     check_labels,
+    check_matches_silver,
     check_null_rates,
     check_row_accounting,
     check_rows_per_day,
+    check_zero_violations,
 )
 
 
@@ -202,3 +204,38 @@ def test_label_complete_short_span_needs_no_complete_rows():
     counts = label_days(date(2026, 3, 31), date(2026, 4, 3))
 
     assert check_label_complete(counts, 0, date(2026, 4, 3)) == []
+
+
+def test_zero_violations_lists_only_rules_with_rows_breaking_them():
+    failures = check_zero_violations({"rule a": 0, "rule b": 3, "rule c": 0})
+
+    assert failures == ["rule b: 3 row(s)"]
+    assert check_zero_violations({}) == []
+
+
+SILVER_SUMMARY = {
+    "total_rows": 30,
+    "day_counts": {date(2026, 4, 1): 10, date(2026, 4, 2): 20},
+    "failure_sum": 2,
+    "label_sum": 5,
+}
+
+
+def test_matches_silver_passes_on_identical_totals():
+    assert check_matches_silver(dict(SILVER_SUMMARY), SILVER_SUMMARY) == []
+
+
+def test_matches_silver_flags_each_kind_of_difference():
+    gold = {
+        "total_rows": 29,
+        "day_counts": {date(2026, 4, 1): 10, date(2026, 4, 2): 19},
+        "failure_sum": 1,
+        "label_sum": 6,
+    }
+
+    text = "\n".join(check_matches_silver(gold, SILVER_SUMMARY))
+
+    assert "gold has 29 rows, silver has 30" in text
+    assert "rows per day differ on 1 day(s)" in text
+    assert "failure_sum is 1 in gold, 2 in silver" in text
+    assert "label_sum is 6 in gold, 5 in silver" in text
